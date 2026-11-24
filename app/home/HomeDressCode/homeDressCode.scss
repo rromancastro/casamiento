@@ -1,0 +1,32 @@
+#dressCode {
+  position: relative;
+  min-height: 494px;
+  overflow: hidden;
+  color: var(--cream);
+  background: url('/home/olive-texture.jpg') center / cover;
+  .drapedFabric { top: 0; left: 0; width: 130px; height: auto; }
+  .dressPampas { bottom: 0; right: 0; width: 70px; height: auto; }
+  .dressContent { position: relative; padding-top: 24px; text-align: center; }
+  .sectionHeading { font-size: 42px; .sectionHeadingInitial { font-size: 58px; margin-right: 4px; } }
+  .dressSubtitle { font-size: 13px; letter-spacing: 5px; line-height: 17px; margin-top: 4px; }
+  .fineRule { margin: 22px auto 27px; }
+  .dressDescription { font-size: 17px; font-style: italic; font-weight: 600; line-height: 26px; }
+  .outfitExamples { height: 116px; display: flex; justify-content: center; align-items: center; gap: 54px; padding-top: 17px; img:last-child { margin-top: 1px; } }
+  .dressPalette { display: flex; justify-content: center; gap: 8px; list-style: none; margin: 17px 0 0; padding: 0; li { width: 32px; height: 32px; border: 1.5px solid var(--cream); border-radius: 50%; background: var(--swatch); transition: transform 200ms; &:hover { transform: translateY(-3px); } } }
+  .reservedColors { margin-top: 32px; p { font-size: 17px; font-style: italic; font-weight: 600; line-height: 21px; } .dressPalette { margin-top: 16px; } }
+}
+@media (min-width: 768px) {
+  #dressCode {
+    min-height: 390px;
+    .drapedFabric { width: 225px; }
+    .dressPampas { width: 122px; }
+    .dressContent { max-width: 916px; margin: auto; padding-top: 18px; }
+    .sectionHeading { font-size: 56px; .sectionHeadingInitial { font-size: 78px; } }
+    .dressSubtitle { font-size: 16px; letter-spacing: 7px; }
+    .fineRule { margin: 20px auto 24px; width: 50px; height: 2px; }
+    .dressDescription { font-size: 21px; line-height: 24px; }
+    .outfitExamples { position: absolute; left: 13%; right: 13%; top: 92px; height: 150px; justify-content: space-between; gap: 0; padding: 0; img:first-child { width: 81px; height: auto; } img:last-child { width: 92px; height: auto; } }
+    .dressPalette { margin-top: 20px; gap: 13px; li { width: 40px; height: 40px; } }
+    .reservedColors { margin-top: 22px; .dressPalette { margin-top: 9px; li { width: 28px; height: 28px; } } }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "hero-mobile.jpg": {
+    "width": 1042,
+    "height": 1600,
+    "bytes": 131596
+  },
+  "cover-flowers.png": {
+    "width": 233,
+    "height": 254,
+    "bytes": 114307
+  },
+  "celebration-paper.jpg": {
+    "width": 916,
+    "height": 415,
+    "bytes": 85447
+  },
+  "celebration-flowers-top.png": {
+    "width": 205,
+    "height": 150,
+    "bytes": 66662
+  },
+  "celebration-flowers-bottom.png": {
+    "width": 201,
+    "height": 172,
+    "bytes": 75056
+  },
+  "olive-texture.jpg": {
+    "width": 916,
+    "height": 274,
+    "bytes": 46946
+  },
+  "draped-fabric.png": {
+    "width": 225,
+    "height": 275,
+    "bytes": 104002
+  },
+  "pampas.png": {
+    "width": 122,
+    "height": 234,
+    "bytes": 61091
+  },
+  "gifts-paper.jpg": {
+    "width": 916,
+    "height": 306,
+    "bytes": 61632
+  },
+  "gifts-flowers.png": {
+    "width": 180,
+    "height": 307,
+    "bytes": 118241
+  },
+  "gifts-branches.png": {
+    "width": 157,
+    "height": 252,
+    "bytes": 89303
+  },
+  "hero-desktop.jpg": {
+    "width": 916,
+    "height": 406,
+    "bytes": 83835
+  },
+  "closing-photo.jpg": {
+    "width": 916,
+    "height": 316,
+    "bytes": 88906
+  }
+}

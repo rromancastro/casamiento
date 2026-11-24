@@ -1,0 +1,16 @@
+.sectionHeading {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin: 0;
+  font-size: 40px;
+  line-height: 1.2;
+  font-weight: 500;
+
+  .sectionHeadingInitial {
+    font-family: 'Pinyon Script', cursive;
+    font-size: 57px;
+    line-height: 0.9;
+    margin-right: -1px;
+  }
+}

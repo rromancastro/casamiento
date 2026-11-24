@@ -1,0 +1,13 @@
+#homeClosing {
+  position: relative;
+  min-height: 153px;
+  color: var(--cream);
+  background: var(--olive);
+  text-align: center;
+  padding-top: 18px;
+  .closingMessage p { font-family: 'Pinyon Script', cursive; font-size: 43px; line-height: 48px; }
+  .fineRule { margin: 13px auto 0; width: 46px; }
+}
+@media (min-width: 768px) {
+  #homeClosing { height: auto; min-height: 316px; aspect-ratio: 916 / 316; padding-top: 0; background: url('/home/closing-photo.jpg') center / cover; .closingMessage { position: absolute; width: 40%; right: 0; top: 26%; p { font-size: clamp(50px, 6vw, 86px); line-height: 1.18; } } .fineRule { width: 74px; height: 2px; margin-top: 22px; } }
+}

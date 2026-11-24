@@ -1,0 +1,10 @@
+.reveal {
+  @media (prefers-reduced-motion: no-preference) {
+    transition: opacity 650ms ease, transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+
+    &--pending {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+  }
+}
