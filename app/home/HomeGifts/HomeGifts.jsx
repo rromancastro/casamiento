@@ -1,36 +1,40 @@
 'use client';
 
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { DesignImage } from '@/app/components/DesignImage/DesignImage';
 import { Reveal } from '@/app/components/Reveal/Reveal';
 import './homeGifts.scss';
 
 const alias = 'ROMANYMICA.BODA';
-const reservationKey = 'roman-micaela-microondas';
-let sessionChoice = false;
-function readChoice() {
-  try { return localStorage.getItem(reservationKey) === 'selected'; } catch { return sessionChoice; }
-}
-function subscribeChoice(callback) {
-  window.addEventListener('storage', callback);
-  window.addEventListener('gift-selection-change', callback);
-  return () => {
-    window.removeEventListener('storage', callback);
-    window.removeEventListener('gift-selection-change', callback);
-  };
-}
-const serverChoice = () => false;
 
 export const HomeGifts = () => {
   const [copyStatus, setCopyStatus] = useState('');
-  const selected = useSyncExternalStore(subscribeChoice, readChoice, serverChoice);
+  const [selected, setSelected] = useState(false);
+  const [name, setName] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const dialogRef = useRef(null);
   const aliasRef = useRef(null);
   const timerRef = useRef(null);
 
   useEffect(() => {
     return () => clearTimeout(timerRef.current);
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch('/api/regalos', { cache: 'no-store', signal: controller.signal })
+      .then(async response => {
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error);
+        setSelected(data.reserved);
+      })
+      .catch(error => { if (error.name !== 'AbortError') setError('No pudimos cargar los regalos. Recargá la página para reintentar.'); })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
   }, []);
 
   async function copyAlias() {
@@ -49,12 +53,27 @@ export const HomeGifts = () => {
     timerRef.current = setTimeout(() => setCopyStatus(''), 3000);
   }
 
-  function updateSelection() {
-    const next = !selected;
-    sessionChoice = next;
-    try { if (next) localStorage.setItem(reservationKey, 'selected'); else localStorage.removeItem(reservationKey); } catch { /* Estado disponible durante la visita. */ }
-    window.dispatchEvent(new Event('gift-selection-change'));
-    dialogRef.current.close();
+  async function reserveGift(event) {
+    event.preventDefault();
+    if (saving || !name.trim()) return;
+    setSaving(true);
+    setError('');
+    try {
+      const response = await fetch('/api/regalos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ gift: 'microondas', name: name.trim() }),
+      });
+      const data = await response.json();
+      if (data.reserved) setSelected(true);
+      if (!response.ok) throw new Error(data.error);
+      setSuccess('¡Gracias! Tu reserva quedó guardada.');
+      dialogRef.current.close();
+    } catch (error) {
+      setError(error.message || 'No pudimos guardar tu reserva. Intentá nuevamente.');
+    } finally {
+      setSaving(false);
+    }
   }
 
   return <section id="regalos" aria-labelledby="giftsTitle">
@@ -71,18 +90,23 @@ export const HomeGifts = () => {
       <div className="giftIdeas">
         <p className="eyebrow">¿QUERÉS REGALARNOS ALGO Y NO SABÉS QUÉ?<br />ACÁ TE DEJAMOS ALGUNAS IDEAS DE COSAS QUE<br />NECESITAMOS Y QUE VAMOS A USAR UN MONTÓN.</p>
         <ul className="giftList">
-          <li><span className={`giftCheckbox ${selected ? 'isChecked' : ''}`} aria-hidden="true">{selected && <Image src="/home/check.svg" width={8} height={6} alt="" />}</span><span>MICROONDAS</span><button type="button" className="reserveGift" onClick={() => dialogRef.current.showModal()} aria-haspopup="dialog">{selected ? 'ELEGIDO ✓' : '¡ANOTARME!'}<Image src="/home/hand.svg" width={8} height={10} alt="" /></button></li>
+          <li><span className={`giftCheckbox ${selected ? 'isChecked' : ''}`} aria-hidden="true">{selected && <Image src="/home/check.svg" width={8} height={6} alt="" />}</span><span>MICROONDAS</span><button type="button" className="reserveGift" disabled={loading || selected || Boolean(error && !name)} onClick={() => dialogRef.current.showModal()} aria-haspopup="dialog">{loading ? 'CARGANDO…' : selected ? 'OCUPADO' : '¡ANOTARME!'}<Image src="/home/hand.svg" width={8} height={10} alt="" /></button></li>
           <li className="giftOccupied"><span className="giftCheckbox isChecked" aria-hidden="true"><Image src="/home/check.svg" width={8} height={6} alt="" /></span><span className="giftName">HELADERA</span><span className="occupiedLabel">OCUPADO</span></li>
         </ul>
+        <p className="reservationStatus" role="status">{success}</p>
+        {error && <p className="reservationStatus" role="alert">{error}</p>}
       </div>
     </Reveal>
     <dialog className="giftDialog" ref={dialogRef} aria-labelledby="giftDialogTitle" onClick={event => { if (event.target === event.currentTarget) event.currentTarget.close(); }}>
       <form method="dialog"><button className="closeDialog" aria-label="Cerrar">×</button></form>
-      <h3 id="giftDialogTitle">{selected ? 'Tu regalo elegido' : 'Un regalo para nuestro hogar'}</h3>
+      <h3 id="giftDialogTitle">Un regalo para nuestro hogar</h3>
       <p className="dialogGiftName">Microondas</p>
-      <p>Coordiná este regalo con Román y Micaela para que puedan reservarlo para vos.</p>
-      <p className="selectionNote">Tu elección se recuerda en este dispositivo; no envía una reserva a los novios.</p>
-      <button className="dialogAction" type="button" onClick={updateSelection}>{selected ? 'Quitar mi elección' : 'Recordar mi elección'}</button>
+      <form onSubmit={reserveGift}>
+        <label htmlFor="giftReservationName">Tu nombre y apellido</label>
+        <input id="giftReservationName" name="name" autoComplete="name" required maxLength={100} value={name} onChange={event => setName(event.target.value)} disabled={saving || selected} />
+        {error && <p className="selectionNote" role="alert">{error}</p>}
+        <button className="dialogAction" type="submit" disabled={saving || selected || !name.trim()}>{saving ? 'Guardando…' : selected ? 'Regalo reservado' : 'Anotarme'}</button>
+      </form>
     </dialog>
   </section>;
 };

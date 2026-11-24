@@ -20,5 +20,6 @@ export const HomeCelebration = () => <section id="celebracion" aria-labelledby="
       </a>
     </div>
     <p className="entryPrice"><Image src="/home/ticket.svg" width={28} height={24} alt="" /><span>Valor: $59.000 c/u</span></p>
+    <p className="entryAlias">Alias: ROMANYMICA.BODA</p>
   </Reveal>
 </section>;

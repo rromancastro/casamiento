@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local gift reservations
+/data/regalos.json
+/data/regalos.json.tmp
